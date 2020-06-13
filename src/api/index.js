@@ -1,15 +1,19 @@
 import axios from "axios";
-
+const dev = "https://dev.api.onetable.xyz";
+const plain = "https://api.onetable.xyz"
 const api = {
-  login: "https://api.onetable.xyz/v1/restaurant/auth/signin",
-  informationUpdate: "https://api.onetable.xyz/v1/restaurant/me/restaurant",
-  informationGet: "https://api.onetable.xyz/v1/restaurant/me/restaurant",
-  informationCreate:"https://api.onetable.xyz/v1/restaurant/me/restaurant",
-  menuUpdate: "https://api.onetable.xyz/v1/restaurant/me/restaurant/menu-category/",
-  menuListGet: "https://api.onetable.xyz/v1/restaurant/me/restaurant/all-menus",
-  groupPlus:"https://api.onetable.xyz/v1/restaurant/me/restaurant/menu-category",
-  menuPlus: "",
-  createMenu:"https://api.onetable.xyz/v1/restaurant/me/restaurant/menu-category/"
+  login: plain+"/v1/restaurant/auth/signin",
+  informationUpdate: plain+"/v1/restaurant/me/restaurant",
+  informationGet: plain+"/v1/restaurant/me/restaurant",
+  informationCreate:plain+"/v1/restaurant/me/restaurant",
+  menuUpdate: plain+"/v1/restaurant/me/restaurant/menu-category/",
+  menuListGet: plain+"/v1/restaurant/me/restaurant/all-menus",
+  groupPlus:plain+"/v1/restaurant/me/restaurant/menu-category",
+  menuMinus:plain+"/v1/restaurant/me/restaurant/menu-category/",
+  categoryMinus:plain+"/v1/restaurant/me/restaurant/menu-category/",
+  createMenu:plain+"/v1/restaurant/me/restaurant/menu-category/",
+  imgurToken:"https://api.imgur.com/oauth2/token",
+  uploadImage:"https://api.imgur.com/3/upload",
 };
 
 function fetchInformation(token) {
@@ -39,9 +43,10 @@ function updateInformation(information, sign, token){
 }
 function createGroup(name, token){
   const AuthStr = 'Bearer '.concat(token); 
-  axios.post(
+  return axios.post(
     api.groupPlus,
     name,
+    
     {headers:{Authorization: AuthStr}},
   );
 }
@@ -67,11 +72,54 @@ function updateMenu(input, token){
   console.log("update성공");
   axios.patch(
     api.createMenu.concat(input.categoryID)+"/menu/".concat(input.menuID),
-    {name:input.name, prices:[{price:input.price}]},
+    {name:input.name, prices:[{price:input.price}],image:input.image, isSharing: input.isSharing},
     {headers:{Authorization: AuthStr}},
   );
 }
 
+function uploadImage(input){
+  console.log("이미지 업로딩중");
+  var fs = require('fs');
+  let clientID = 'f1f15213109a236'
+  function base64_encode(file) {
+      // read binary data
+      var bitmap = fs.readFileSync(file);
+      // convert binary data to base64 encoded string
+      return new Buffer(bitmap).toString('base64');
+  }
+  var result = base64_encode(input.path);
+  console.log(result);
+
+  return axios.post('https://api.imgur.com/3/image',
+  {
+    image: result,
+    type: 'base64',
+  }
+  ,
+  {
+    headers:{
+      'Authorization': 'Client-ID f1f15213109a236',
+    }
+  })
+}
+
+function deleteMenu(categoryID, menuID, token){
+  const AuthStr = 'Bearer '.concat(token);
+  console.log(menuID);
+  return axios.delete(
+    api.menuMinus.concat(categoryID)+"/menu/".concat(menuID), 
+    {headers:{Authorization: AuthStr}},
+  );
+
+}
+
+function deleteCategory(categoryID, token){
+  const AuthStr = 'Bearer '.concat(token);
+  return axios.delete(
+    api.categoryMinus.concat(categoryID), 
+    {headers:{Authorization: AuthStr}},
+  );
+}
 
 
 export {
@@ -80,6 +128,9 @@ export {
   fetchMenuList,
   createGroup,
   createMenu,
-  updateMenu
+  updateMenu,
+  uploadImage,
+  deleteMenu,
+  deleteCategory
 
 };

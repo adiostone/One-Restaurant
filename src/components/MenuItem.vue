@@ -1,12 +1,34 @@
 <template>
   <div class="menuItem">
+
+    <div class="menuItem__column">
+      <div class="menuItem__image">
+        <v-avatar size="216" class="menuItem__avatar">
+          <img v-bind:src="files" alt="이미지 없음">
+        </v-avatar>
+        <v-file-input
+          label="File input"
+          filled
+          prepend-icon="mdi-camera"
+          v-model="files"
+          @change="upload"
+          id="myFile"
+        ></v-file-input>
+      </div>
+    </div>
+
     <div class="menuItem__column">
       <div class="menuItem__label">
         메뉴그룹
       </div>
       <div class="menuItem__input">
-        <select  v-model="categoryID" name="category">
-          <option v-for="category in this.$store.state.menuList" v-bind:key="category.name" v-bind:value="category.id" >{{category.name}}</option>
+        <select v-model="categoryID" name="category">
+          <option
+            v-for="category in this.$store.state.menuList"
+            v-bind:key="category.name"
+            v-bind:value="category.id"
+            >{{ category.name }}</option
+          >
         </select>
       </div>
     </div>
@@ -25,7 +47,28 @@
         가격
       </div>
       <div class="menuItem__input">
-        <label><input type="text" v-model="price" class="input-text" placeholder="숫자만 입력하세요" autofocus />원</label>
+        <label
+          ><input
+            type="text"
+            v-model="price"
+            class="input-text"
+            placeholder="숫자만 입력하세요"
+            autofocus
+          />원</label
+        >
+      </div>
+    </div>
+
+    <div class="menuItem__column">
+      <div class="menuItem__label">
+        공유메뉴
+      </div>
+      <div class="menuItem__input">
+            <v-checkbox
+              v-model="isSharing"
+              :label="`공유: ${isShare}`"
+              :inset=true
+            ></v-checkbox>
       </div>
     </div>
 
@@ -36,23 +79,37 @@
 </template>
 
 <script>
-import {createMenu} from "../api/index.js";
+import { createMenu } from "../api/index.js";
 export default {
   name: "MenuItem",
   data() {
     return {
-      categoryID:"",
-      name:"",
-      price:"",
+      files:"",
+      categoryID: "",
+      name: "",
+      price: "",
+      isSharing: true,
+    };
+  },
+  computed: {
+    isShare: function(){
+      if(this.isSharing==true){
+        return "가능";
+      }else{
+        return "불가능";
+      }
     }
   },
   methods: {
-    submit:function(){
-      const temp = {name:this.name, prices:[{price:this.price}]};
-      createMenu(temp, this.categoryID, this.$store.state.token.access );
-      this.$store.commit("PLUS_MENU",[temp,this.categoryID]);
-    }
-  },
+    submit: function() {
+      console.log(this.categoryID);
+      this.$store.dispatch("CREATE_MENU",{name: this.name, prices: [{ price: this.price }],categoryID:this.categoryID, image:this.files, isSharing:this.isSharing});
+      
+    },
+    upload: async function(){
+      this.files = await this.$store.dispatch("CREATE_MENUIMAGE",this.files);
+    },
+  }
 };
 </script>
 
@@ -75,7 +132,6 @@ export default {
   margin-bottom: 30px;
 }
 
-
 .menuItem__submit {
   background-color: #ffb21c;
   padding: 25px;
@@ -86,11 +142,10 @@ export default {
   font-weight: 600;
 }
 
-
 .button {
   width: 140px;
   height: 45px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 2.5px;
@@ -104,16 +159,16 @@ export default {
   transition: all 0.3s ease 0s;
   cursor: pointer;
   outline: none;
-  }
+}
 
 .button:hover {
-  background-color: #2EE59D;
+  background-color: #2ee59d;
   box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
   color: #fff;
   transform: translateY(-7px);
 }
 
-select{
+select {
   width: 300px;
   font-size: 20px;
   padding: 10px 10px;
@@ -143,15 +198,12 @@ input {
   width: 300px;
 }
 
-.menuItem__input-bill{
+.menuItem__input-bill {
   width: 120px;
-  margin-left:20px;
+  margin-left: 20px;
   transition: width 0.4s ease-in-out;
 }
-.menuItem__input-bill:focus{
+.menuItem__input-bill:focus {
   width: 160px;
 }
-
-
-
 </style>

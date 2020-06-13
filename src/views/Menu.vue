@@ -14,10 +14,8 @@ export default {
   name: "Menu",
   components: {
     MenuList,
-    MenuItem,
-    
   },
-  created(){
+  created() {
     // this.$store.dispatch('FETCH_MENULIST');
   }
 };

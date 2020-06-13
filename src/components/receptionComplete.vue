@@ -7,14 +7,14 @@
     </div>
     <div class="order__column">
       <div class="order__text">
-        <span class="order__text1"> [메뉴2개] 30,000원</span>
+        <span class="order__text1"> [메뉴2개] 20,000원</span>
         <span class="order__badge">결제완료</span>
         <span class="order__badge">요청있음</span>
       </div>
 
       <div class="order__text">
         <span class="order__text2"
-          >김치찌개 1개 / 된장찌개 2개 / 김치볶음밥 1개</span
+          >페퍼로니피자 1개 / 핫윙 1개 </span
         >
       </div>
       <div class="order__text">
@@ -27,10 +27,7 @@
     <div class="order__column">
       <div class="order__buttons">
         <div class="order__buttons-order">
-          <span class="text">접수하기</span>
-        </div>
-        <div class="order__buttons-timeLimit">
-          39분
+          <OrderInformation />
         </div>
       </div>
     </div>
@@ -38,8 +35,12 @@
 </template>
 
 <script>
+import OrderInformation from "../components/OrderInformation.vue";
 export default {
-  name: "OrderItem"
+  name: "receptionComplete",
+  components:{
+    OrderInformation
+  },
 };
 </script>
 
@@ -84,8 +85,6 @@ export default {
   display: flex;
 }
 .order__buttons-order {
-  width: 100px;
-  height: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,12 +93,13 @@ export default {
   font-weight: 600;
 }
 .order__buttons-timeLimit {
-  width: 100px;
-  height: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
   border: 1px solid #c9c9c9;
   font-weight: 600;
+}
+.order__single{
+  margin-top:10px;
 }
 </style>

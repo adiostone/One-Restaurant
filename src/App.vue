@@ -33,6 +33,7 @@ export default {
 <style>
 * {
   box-sizing: border-box;
+  font-family: sans-serif;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -66,16 +67,13 @@ export default {
 #nav {
   padding: 30px;
 }
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
 }
-
 #nav a.router-link-exact-active {
   color: #42b983;
 }
-
 a {
   display: inline-block;
   transition: .3s;

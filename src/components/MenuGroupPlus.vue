@@ -1,6 +1,5 @@
 <template>
   <div class="menuItem">
-
     <div class="menuItem__column">
       <div class="menuItem__label">
         메뉴그룹 이름
@@ -10,30 +9,27 @@
       </div>
     </div>
 
-
     <div class="wrap">
-      <button class="button" v-on:click="submit" >반영하기</button>
+      <button class="button" v-on:click="submit">반영하기</button>
     </div>
   </div>
 </template>
 
 <script>
-import {createGroup} from "../api/index.js";
+import { createGroup } from "../api/index.js";
 export default {
   name: "MenuItem",
   data() {
     return {
-      groupName:"",
-    }
+      groupName: ""
+    };
   },
   methods: {
-    submit:function(){
-      const temp = {name: this.groupName};
-      createGroup(temp, this.$store.state.token.access );
-      this.$store.commit("PLUS_GROUP",this.groupName);
-      
+    submit: function() {
+      const temp = { name: this.groupName };
+      this.$store.dispatch("CREATE_GROUP",temp);
     }
-  },
+  }
 };
 </script>
 
@@ -56,7 +52,6 @@ export default {
   margin-bottom: 30px;
 }
 
-
 .menuItem__submit {
   background-color: #ffb21c;
   padding: 25px;
@@ -67,11 +62,10 @@ export default {
   font-weight: 600;
 }
 
-
 .button {
   width: 140px;
   height: 45px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 2.5px;
@@ -85,15 +79,14 @@ export default {
   transition: all 0.3s ease 0s;
   cursor: pointer;
   outline: none;
-  }
+}
 
 .button:hover {
-  background-color: #2EE59D;
+  background-color: #2ee59d;
   box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
   color: #fff;
   transform: translateY(-7px);
 }
-
 
 .menuItem__label {
   font-weight: 600;
@@ -115,7 +108,4 @@ input {
 .input-text:focus {
   width: 300px;
 }
-
-
-
 </style>

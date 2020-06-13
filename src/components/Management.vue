@@ -14,7 +14,7 @@
           정보 수정
         </div>
         <div class="menus__menu-set">
-          <router-link class= "link" to="/information">설정하기</router-link> 
+          <router-link to="/information">설정하기</router-link>
         </div>
       </div>
       <div class="menus__menu">
@@ -86,14 +86,19 @@
 </template>
 
 <script>
+import Calender from "../components/Calender.vue";
 export default {
   name: "Management",
   props: {
     msg: String
   },
-  created(){
-    this.$store.dispatch('FETCH_INFORMATION');
+  components: {
+    Calender
   },
+  created() {
+    this.$store.dispatch("FETCH_INFORMATION");
+    this.$store.dispatch("FETCH_SOCKET");
+  }
 };
 </script>
 
@@ -129,7 +134,7 @@ export default {
 .menus__menu {
   display: flex;
   justify-content: space-between;
-  width: 580px;
+  width: 47%;
   border: 2px solid #f2f2f2;
 }
 .menus__menu-text {
@@ -162,7 +167,7 @@ export default {
   opacity: 0.6;
 }
 
-.link{
-  text-decoration:none;
+.link {
+  text-decoration: none;
 }
 </style>

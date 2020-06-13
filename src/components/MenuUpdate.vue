@@ -1,11 +1,24 @@
 <template>
   <div class="menuItem">
+    <div class="menuItem__image">
+      <v-avatar size="216" class="menuItem__avatar">
+        <img v-bind:src="image" alt="이미지 없음">
+      </v-avatar>
+      <v-file-input
+        label="File input"
+        filled
+        prepend-icon="mdi-camera"
+        v-model="files"
+        @change="upload"
+        id="myFile"
+      ></v-file-input>
+    </div>
     <div class="menuItem__column">
       <div class="menuItem__label">
         메뉴그룹
       </div>
       <div class="menuItem__input">
-        {{menu.categoryName}}
+        {{ categoryName }}
       </div>
     </div>
 
@@ -14,7 +27,7 @@
         메뉴이름
       </div>
       <div class="menuItem__input">
-        <input type="text" class="input-text" v-model="menu.name" autofocus />
+        <input type="text" class="input-text" v-model="name" autofocus />
       </div>
     </div>
 
@@ -23,7 +36,27 @@
         가격
       </div>
       <div class="menuItem__input">
-        <label><input type="text" class="input-text" v-model="menu.price" placeholder="숫자만 입력하세요" autofocus />원</label>
+        <label
+          ><input
+            type="text"
+            class="input-text"
+            v-model="price"
+            placeholder="숫자만 입력하세요"
+            autofocus
+          />원</label
+        >
+      </div>
+    </div>
+
+    <div class="menuItem__column">
+      <div class="menuItem__label">
+        공유메뉴
+      </div>
+      <div class="menuItem__input">
+            <v-checkbox
+              v-model="isSharing"
+              :label="`공유: ${isShare}`"
+            ></v-checkbox>
       </div>
     </div>
 
@@ -34,34 +67,59 @@
 </template>
 
 <script>
-import {updateMenu} from "../api/index.js";
+import { updateMenu } from "../api/index.js";
+import { mapFields } from "vuex-map-fields";
 export default {
   name: "MenuUpdate",
-  computed:{
-    menu:{
-      get(){
-        return this.$store.state.menu;
-      },
-      set(value){
-        console.log("set문제");
-        this.$store.commit('updateMenu', value);
-      }
+  data() {
+    return {
+      files:[],
     }
   },
-  created(){
+  computed: {
+    isShare: function(){
+      if(this.isSharing==true){
+        return "가능";
+      }else{
+        return "불가능";
+      }
+    },
+
+    ...mapFields([
+    "menu.image",
+    "menu.categoryName",
+    "menu.name",
+    "menu.price",
+    "menu.isSharing",
+    
+
+    ])
+  },
+  created() {
     console.log("update페이지");
-    this.$store.commit("GET_menu",this.$route.params.menuID);
+    this.$store.commit("FETCH_menu", {
+      menuID: parseInt(this.$route.params.menuID),
+      categoryID: parseInt(this.$route.params.categoryID)
+    });
   },
   methods: {
-    submit:function(){
-      this.$router.push({name:"Home"});
+    submit: function() {
       const temp = this.$store.state.menu;
+      console.log(temp);
       updateMenu(temp, this.$store.state.token.access);
-      console.log("마지막");
-      this.$router.go(1);
+    },
+    upload: function(){
+      this.$store.dispatch("UPLOAD_MENUIMAGE",this.files);
+    },
+  },
+  watch: {
+    '$route'(to,from){
+      this.$store.commit("FETCH_menu", {
+      menuID: parseInt(this.$route.params.menuID),
+      categoryID: parseInt(this.$route.params.categoryID)
+    });
     }
   },
-  
 };
 </script>
 
@@ -84,7 +142,6 @@ export default {
   margin-bottom: 30px;
 }
 
-
 .menuItem__submit {
   background-color: #ffb21c;
   padding: 25px;
@@ -95,11 +152,10 @@ export default {
   font-weight: 600;
 }
 
-
 .button {
   width: 140px;
   height: 45px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 2.5px;
@@ -113,16 +169,16 @@ export default {
   transition: all 0.3s ease 0s;
   cursor: pointer;
   outline: none;
-  }
+}
 
 .button:hover {
-  background-color: #2EE59D;
+  background-color: #2ee59d;
   box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
   color: #fff;
   transform: translateY(-7px);
 }
 
-select{
+select {
   width: 300px;
   font-size: 20px;
   padding: 10px 10px;
@@ -151,16 +207,25 @@ input {
 .input-text:focus {
   width: 300px;
 }
-
-.menuItem__input-bill{
+img{
+  width:200px;
+  height:200px;
+}
+.menuItem__input-bill {
   width: 120px;
-  margin-left:20px;
+  margin-left: 20px;
   transition: width 0.4s ease-in-out;
 }
-.menuItem__input-bill:focus{
+.menuItem__input-bill:focus {
   width: 160px;
 }
 
-
-
+#myFile{
+  width: 200px;
+  height: 40px;
+  border: 1px solid #c9c9c9;
+  padding:20px;
+  font-size: 20px;
+  text-align: center;
+}
 </style>
