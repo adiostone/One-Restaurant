@@ -2,7 +2,7 @@
   <div class="text-center" data-app >
       <div v-for="(customer, index) in singleCustomer" v-bind:key="customer.phoneNumber" class="orderModal">
           <div class="orderModal__time">
-              개인배달지{{index}}
+              개인배달지{{index+1}}
           </div>
           <div class="orderModal__request">
               <div class="orderModal__title">
@@ -41,27 +41,27 @@
               </div>
               <div class="orderModal__menus-various">
                   <div class="orderModal__menus-text-various">
-                      단체메뉴
+                      단체메뉴(수량)
                   </div>
-                  <div class="orderModal__menu">
+                  <div v-for="groupMenu in groupMenus" v-bind:key="groupMenu.id" class="orderModal__menu">
                       <div class="orderModal__menu-name">
-                          페퍼로니피자
+                          {{groupMenu.name}}({{groupMenu.quantity}}) 
                       </div>
                       <div class="orderModal__menu-price">
-                          5000원
+                          {{groupMenu.menuTotalPrice}}+{{groupMenu.packagingCost}}원
                       </div>
                   </div>
               </div>
               <div class="orderModal__menus-single">
                   <div class="orderModal__menus-text-single">
-                      개인메뉴
+                      개인메뉴(수량)
                   </div>
-                  <div class="orderModal__menu">
+                  <div v-for="singleMenu in singleMenus" v-bind:key="singleMenu.id" class="orderModal__menu">
                       <div class="orderModal__menu-name">
-                          핫윙
+                          {{singleMenu.name}}({{singleMenu.menuTotalPrice}})
                       </div>
                       <div class="orderModal__menu-price">
-                          5000원
+                          {{singleMenu.menuTotalPrice}}원
                       </div>
                   </div>
               </div>
@@ -70,18 +70,18 @@
                   
                   <div class="orderModal__sum-menu">
                       <div class="orderModal__menu-name">
-                          메뉴 합계
+                          공유배달비
                       </div>
                       <div class="orderModal__menu-price">
-                          10000원
+                          {{customer.deliveryCostPerCapita}}원
                       </div>
                   </div>
                   <div class="orderModal__sum-menu">
                       <div class="orderModal__menu-name">
-                          배달팁
+                          비대면 배달비
                       </div>
                       <div class="orderModal__menu-price">
-                          1500원
+                          {{customer.nonF2FCost}}원
                       </div>
                   </div>
                   <div class="orderModal__sum-menu">
@@ -89,7 +89,7 @@
                           총 결제금액
                       </div>
                       <div class="orderModal__menu-price">
-                          11500원
+                          {{customer.totalPrice}}원
                       </div>
                   </div>
               </div>
@@ -115,19 +115,23 @@ export default {
       },
       groupMenus(){
           let result = [];
-          for(let i = 0 ; i<singleCustomer.menus.length;i++){
-              if(singleCustomer.menus[i].isShared === true){
-                  result.push(singleCustomer.menus[i]);
-              }
+          for(let k = 0; k<this.singleCustomer.length; k++){
+            for(let i = 0 ; i<this.singleCustomer[k].menus.length;i++){
+                if(this.singleCustomer[k].menus[i].isShared === true){
+                    result.push(this.singleCustomer[k].menus[i]);
+                }
+            }
           }
           return result;
       },
       singleMenus(){
           let result = [];
-          for(let i = 0 ; i<singleCustomer.menus.length;i++){
-              if(singleCustomer.menus[i].isShared === false){
-                  result.push(singleCustomer.menus[i]);
-              }
+          for(let k = 0; k<this.singleCustomer.length; k++){
+            for(let i = 0 ; i<this.singleCustomer[k].menus.length;i++){
+                if(this.singleCustomer[k].menus[i].isShared === false){
+                    result.push(this.singleCustomer[k].menus[i]);
+                }
+            }
           }
           return result;
       }
@@ -138,7 +142,7 @@ export default {
 
 <style scoped>
 .modal{
-    background-color:#FF6060;
+    background-color:dodgerblue;
     color: white;
     border-radius:10px;
 }
@@ -147,7 +151,7 @@ export default {
 }
 .orderModal__time{
     padding:  20px 20px;
-    background-color:#FF6060;
+    background-color:dodgerblue;
     color: white;
     font-weight: 600;
     font-size: 20px;

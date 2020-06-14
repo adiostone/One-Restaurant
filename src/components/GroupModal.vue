@@ -1,15 +1,21 @@
 <template>
+<div class="groupContainer">
+    <div class="groupHeader">
+        <div class="groupAddress">주소지: <span class="groupAddress-title">{{groupCustomer[0].address}}</span></div>
+    </div>
   <div class="text-center" data-app >
-      <div class="orderModal">
+
+      
+      <div v-for="(customer, index) in groupCustomer" v-bind:key="customer.phoneNumber" class="orderModal">
           <div class="orderModal__time">
-              개인배달지1
+              단체배달고객 {{index+1}}
           </div>
           <div class="orderModal__request">
               <div class="orderModal__title">
                   요청사항
               </div>
               <div class="orderModal__request-content">
-                  문앞에 놓아주세요
+                  {{customer.request}}
               </div>
           </div>
           
@@ -19,18 +25,10 @@
               </div>
               <div class="orderModal__address">
                   <div class="orderModal__information-text1">
-                      주소
-                  </div>
-                  <div class="orderModal__information-text2">
-                      서울시 용산구 신계동 동산아파트 1203호
-                  </div>
-              </div>
-              <div class="orderModal__address">
-                  <div class="orderModal__information-text1">
                       번호
                   </div>
                   <div class="orderModal__information-text2">
-                      xxx-xxxx-xxxx
+                      {{customer.phoneNumber}}
                   </div>
               </div>
           </div>
@@ -41,27 +39,27 @@
               </div>
               <div class="orderModal__menus-various">
                   <div class="orderModal__menus-text-various">
-                      단체메뉴
+                      단체메뉴(수량)
                   </div>
-                  <div class="orderModal__menu">
+                  <div v-for="groupMenu in groupMenus" v-bind:key="groupMenu.id" class="orderModal__menu">
                       <div class="orderModal__menu-name">
-                          페퍼로니피자
+                          {{groupMenu.name}}({{groupMenu.quantity}}) 
                       </div>
                       <div class="orderModal__menu-price">
-                          5000원
+                          <span class="price__badge">+포장비{{groupMenu.packagingCost}}원</span>{{groupMenu.menuTotalPrice}}원
                       </div>
                   </div>
               </div>
               <div class="orderModal__menus-single">
                   <div class="orderModal__menus-text-single">
-                      개인메뉴
+                      개인메뉴(수량)
                   </div>
-                  <div class="orderModal__menu">
+                  <div v-for="singleMenu in singleMenus" v-bind:key="singleMenu.id" class="orderModal__menu">
                       <div class="orderModal__menu-name">
-                          핫윙
+                          {{singleMenu.name}}({{singleMenu.menuTotalPrice}})
                       </div>
                       <div class="orderModal__menu-price">
-                          5000원
+                          {{singleMenu.menuTotalPrice}}원
                       </div>
                   </div>
               </div>
@@ -70,18 +68,10 @@
                   
                   <div class="orderModal__sum-menu">
                       <div class="orderModal__menu-name">
-                          메뉴 합계
+                          공유 배달비
                       </div>
                       <div class="orderModal__menu-price">
-                          10000원
-                      </div>
-                  </div>
-                  <div class="orderModal__sum-menu">
-                      <div class="orderModal__menu-name">
-                          배달팁
-                      </div>
-                      <div class="orderModal__menu-price">
-                          1500원
+                          {{customer.deliveryCostPerCapita}}원
                       </div>
                   </div>
                   <div class="orderModal__sum-menu">
@@ -89,7 +79,7 @@
                           총 결제금액
                       </div>
                       <div class="orderModal__menu-price">
-                          11500원
+                          {{customer.totalPrice}}원
                       </div>
                   </div>
               </div>
@@ -97,6 +87,7 @@
       </div>
     <v-btn text class="printOut"><i class="fas fa-print"></i>주문표 인쇄</v-btn>
   </div>
+</div>
 </template>
 
 <script>
@@ -112,6 +103,28 @@ export default {
   computed: {
       groupCustomer(){
           return this.$store.getters.groupCustomer(this.orderID);
+      },
+      groupMenus(){
+          let result = [];
+          for(let k = 0; k<this.groupCustomer.length; k++){
+            for(let i = 0 ; i<this.groupCustomer[k].menus.length;i++){
+                if(this.groupCustomer[k].menus[i].isShared === true){
+                    result.push(this.groupCustomer[k].menus[i]);
+                }
+            }
+          }
+          return result;
+      },
+      singleMenus(){
+          let result = [];
+          for(let k = 0; k<this.groupCustomer.length; k++){
+            for(let i = 0 ; i<this.groupCustomer[k].menus.length;i++){
+                if(this.groupCustomer[k].menus[i].isShared === false){
+                    result.push(this.groupCustomer[k].menus[i]);
+                }
+            }
+          }
+          return result;
       }
   },
 
@@ -119,6 +132,24 @@ export default {
 </script>
 
 <style scoped>
+.groupContainer{
+    width:100%;
+}
+.groupHeader{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    background-color:#546E7A;
+    color:white;
+    font-weight: 600;
+    padding: 15px 0px;
+    margin-bottom:10px;
+}
+.text-center{
+    width:300px;
+}
 .modal{
     background-color:#FF6060;
     color: white;
@@ -140,19 +171,22 @@ export default {
     margin-left: 10px;
     margin-bottom: 10px;
     margin-top: 10px;
+    
 }
 .orderModal__request-content{
     margin: 0px 10px;
     font-size:15px;
     font-weight: 500;
+    padding-left:10px;
 }
 .orderModal__address{
     display:flex;
-    margin-bottom:10px;
+    padding-left:10px;
+    margin-bottom:0px;
 }
 .orderModal__information-text1{
     margin: 0px 10px;
-    font-size: 16px;
+    font-size: 15px;
     opacity:0.5;
     padding-right:10px;
     
@@ -164,7 +198,7 @@ export default {
     color:lightcoral;
 }
 .orderModal__menus{
-    padding: 5px 20px 10px 20px;
+    padding: 5px 20px 10px 0px;
 }
 .orderModal__menu{
     display:flex;
@@ -183,5 +217,16 @@ export default {
     background-color:#9CCC65;
     color:white;
     width:100%;
+}
+.price__badge{
+    margin-left: 5px;
+    font-size: 7px;
+    padding: 3px;
+    border: 0.5px groove grey;
+    font-weight: 600;
+    color:dodgerblue;
+    border-radius: 5px;
+    margin-right:3px;
+    vertical-align: middle;
 }
 </style>

@@ -2,17 +2,8 @@
   <div class="text-center" data-app >
       <div class="orderModal">
           <div class="orderModal__time">
-              {{totalMenu.orderedAt}}
-          </div>
-          <!-- <div class="orderModal__request">
-              <div class="orderModal__title">
-                  요청사항
-              </div>
-              <div class="orderModal__request-content">
-                  피자 토핑에 올리브 많이 주세요.
-              </div>
-          </div> -->
-          
+            {{`${(new Date(totalMenu.orderedAt)).getHours()}시 ${(new Date(totalMenu.orderedAt)).getMinutes()}분`}} 주문접수
+          </div>        
 
           <div class="orderModal__menus">
               <div class="orderModal__title">
@@ -33,11 +24,11 @@
               </div>
               <div class="orderModal__menus-single">
                   <div  class="orderModal__menus-text-single">
-                      개인메뉴
+                      개인메뉴(수량)
                   </div>
                   <div v-for="notSharedMenu in notSharedMenus" v-bind:key="notSharedMenu.id" class="orderModal__menu">
                       <div class="orderModal__menu-name">
-                          {{notSharedMenu.name}} {{notSharedMenu.quantity}}
+                          {{notSharedMenu.name}} ({{notSharedMenu.quantity}})
                       </div>
                       <div class="orderModal__menu-price">
                           {{notSharedMenu.menuTotalPrice}}원
@@ -125,6 +116,7 @@ export default {
     font-weight: 600;
     font-size: 20px;
     margin-bottom: 10px;
+    text-align:center;
 }
 .orderModal__title{
     font-size:18px;

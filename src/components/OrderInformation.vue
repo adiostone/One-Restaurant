@@ -3,11 +3,11 @@
     <div class="text-center" data-app >
         <v-dialog v-model="dialog" :width="wid" >
             <template v-slot:activator="{ on }">
-                <v-btn text large color="primary" v-on="on" class="modal" >상세정보</v-btn>
+                <v-btn text large color="primary" v-on="on" class="modal" >상세정보 <i class="fas fa-file-invoice-dollar"></i> </v-btn>
             </template>
             <v-stepper v-model="e1">
                 <v-stepper-header>
-                <v-stepper-step :complete="e1 > 1" step="1">주문 정보</v-stepper-step>
+                <v-stepper-step :complete="e1 > 1" step="1">전체 주문 정보</v-stepper-step>
 
                 <v-divider></v-divider>
 
@@ -59,7 +59,7 @@
                     <v-btn
                     color="primary"
                     class="stepper-btn3"
-                    @click="e1 = 1; wid =900"
+                    @click="e1 = 1; wid =400"
                     >
                     전체 주문정보 보기
                     </v-btn>
@@ -89,7 +89,8 @@ export default {
     },
     components:{
         OrderModal,
-        SingleModal
+        SingleModal,
+        GroupModal,
     },
     computed: {
         order(){
@@ -111,10 +112,11 @@ export default {
 <style scoped>
 .text-center >>> .modal{
     height:150px;
-    background-color:#0042d1;
+    background-color:#039BE5;
     color:white;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
+    border:none;
 }
 .text-center >>> .continue-button{
     color: white;
@@ -126,7 +128,7 @@ export default {
     
 }
 .text-center >>> .modals{
-    margin-right:50px;
+    margin-right:0px;
 }
 .text-center >>> .stepper-btn1{
     margin-top:10px;

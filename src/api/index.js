@@ -98,7 +98,7 @@ function uploadImage(input){
   ,
   {
     headers:{
-      'Authorization': 'Client-ID f1f15213109a236',
+      'Authorization': 'Client-ID a8253f2d2de634e',
     }
   })
 }

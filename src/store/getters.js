@@ -43,7 +43,7 @@ export default {
     for(let i = 0; i<orders.length; i++){
       if(orders[i].id === id){
         for(let j = 0; j<orders[i].byMenu.menus.length;j++){
-          if(orders[i].byMenu.menus[j].isShared === false){
+          if(orders[i].byMenu.menus[j].isShared == false){
             result.push(orders[i].byMenu.menus[j]);
           }
         }
@@ -57,12 +57,13 @@ export default {
     for(let i = 0; i<orders.length; i++){
       if(orders[i].id === id){
         for(let j = 0; j<orders[i].byCustomer.length; j++){
-          if(orders[i].byCustomer[j].isNonF2F===true){
+          if(orders[i].byCustomer[j].isNonF2F==true){
             result.push(orders[i].byCustomer[j]);
           }
         }
       }
     }
+    console.log(result);
     return result;
   },
   groupCustomer:(state) => (id) =>{
@@ -71,7 +72,7 @@ export default {
     for(let i = 0; i<orders.length; i++){
       if(orders[i].id === id){
         for(let j = 0; j<orders[i].byCustomer.length; j++){
-          if(orders[i].byCustomer[j].isNonF2F===false){
+          if(orders[i].byCustomer[j].isNonF2F==false){
             result.push(orders[i].byCustomer[j]);
           }
         }

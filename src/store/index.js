@@ -35,6 +35,7 @@ const store = new Vuex.Store({
     waitOrders:[
       {
         id: 22,
+        orderedAt:Date.now(),
         byCustomer:[
           {
             phoneNumber: "102151",
@@ -65,6 +66,14 @@ const store = new Vuex.Store({
                 pricePerCapita: 3500,
                 name: "양념 치킨",
                 packagingCost: 1200,
+              },
+              {
+                id: 12,
+                quantity: 2,
+                isShared:false,
+                pricePerCapita: 3200,
+                name: "감자튀김",
+                packagingCost: 1200,
               }
             ],
             totalPackaginCost: 20500,
@@ -82,6 +91,7 @@ const store = new Vuex.Store({
     allOfOrders:[
       {
         id: 22,
+        orderedAt:Date.now(),
         byCustomer:[
           {
             phoneNumber: "102151",
@@ -96,6 +106,8 @@ const store = new Vuex.Store({
                 pricePerCapita: 2500,
                 name: "후라이드 치킨",
                 packagingCost: 1200,
+                menuTotalPrice: 26000,
+                packagingCost:1000,
               }
             ],
             deliveryCostPerCapita:2050,

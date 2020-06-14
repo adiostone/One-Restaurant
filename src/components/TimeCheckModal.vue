@@ -2,7 +2,7 @@
   <div class="text-center" data-app >
     <v-dialog v-model="dialog" width="700" >
       <template v-slot:activator="{ on }">
-        <v-btn text large color="primary" v-on="on" class="modal" >주문접수/취소</v-btn>
+        <v-btn text large color="primary" v-on="on" class="modal" >주문접수/취소 <i class="fas fa-user-check"></i></v-btn>
       </template>
       <div class="timeCheckModal">
         <div class="tiemCheckModal__header">
@@ -54,7 +54,10 @@ export default {
       this.dialog=false;
     },
     recognize:function(){
-      const payload = {id:this.orderID, estimatedTime:this.timeCheck};
+      const times = parseInt(this.timeCheck);
+      console.log(typeof(times));
+      console.log(times);
+      const payload = {id:this.orderID, estimatedTime:times};
       this.$store.dispatch('acceptOrder',payload);
       this.dialog=false;
     }
@@ -71,7 +74,7 @@ export default {
     background-color:#0042d1;
     color:white;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
 }
 .tiemCheckModal__header{
     padding:  20px 20px;

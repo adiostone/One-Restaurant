@@ -128,12 +128,13 @@ export default {
     state.alert = true;
     state.allOfOrders.push(payload);
   },
-
   waitToProcess(state, payload){
+    console.log("replyID:",payload);
     const id = payload;
-    for(let i=0; i<state.waitOrders; i++){
-      if(waitOrders[i].id===id){
-        const temp = waitOrders[i];
+    for(let i=0; i<state.waitOrders.length; i++){
+      if(state.waitOrders[i].id===id){
+        const temp = state.waitOrders[i];
+        console.log("찾음!!!!!");
         state.processOrders.push(temp);
         state.waitOrders.splice(i,1);
         break;
@@ -142,9 +143,9 @@ export default {
   },
   waitToAllOf(state, payload){
     const id = payload;
-    for(let i=0; i<state.waitOrders; i++){
-      if(waitOrders[i].id===id){
-        const temp = waitOrders[i];
+    for(let i=0; i<state.waitOrders.length; i++){
+      if(state.waitOrders[i].id===id){
+        const temp = state.waitOrders[i];
         state.waitOrders.splice(i,1);
         break;
       }
@@ -152,9 +153,9 @@ export default {
   },
   processToComplete(state, payload){
     const id = payload;
-    for(let i=0; i<state.processOrders; i++){
-      if(processOrders[i].id===id){
-        const temp = processOrders[i];
+    for(let i=0; i<state.processOrders.length; i++){
+      if(state.processOrders[i].id===id){
+        const temp = state.processOrders[i];
         state.completeOrders.push(temp);
         state.processOrders.splice(i,1);
         break;

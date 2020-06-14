@@ -2,7 +2,7 @@
   <div class="text-center" data-app >
     <v-dialog v-model="dialog" width="700" >
       <template v-slot:activator="{ on }">
-        <v-btn text large color="primary" v-on="on" class="modal" >음식완료/배달출발</v-btn>
+        <v-btn text large color="primary" v-on="on" class="modal" >음식완료/배달출발 <v-icon>fas fa-tachometer-alt</v-icon></v-btn>
       </template>
       <div class="timeCheckModal">
         <div class="tiemCheckModal__header">
@@ -12,7 +12,7 @@
             배달 출발 알림을 보내시겠습니까?
         </div>
         <div class="timeCheckModal__footer">
-          <v-btn text @click="reject" class="allowButton">배달시작</v-btn>
+          <v-btn text @click="recognize" class="allowButton">배달시작</v-btn>
         </div>
       </div>
 

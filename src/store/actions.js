@@ -68,7 +68,7 @@ export default {
     var vm = this;
     let categoryID = payload.categoryID;
     console.log("image잘넘어감",payload.image);
-    let input = {name: payload.name, prices:payload.prices, image: payload.image, isSharing: payload.isSharing};
+    let input = {name: payload.name, prices:payload.prices, image: payload.image.path, isSharing: payload.isSharing};
     return createMenu(input,categoryID,this.state.token.access)
       .then(response => {
         commit("PLUS_MENU",[input, categoryID, response.data.createdID]);
@@ -134,7 +134,7 @@ export default {
     }
     ws.onmessage = (event) =>{
       const result = JSON.parse(event.data);
-      console.log(result);
+      console.log("result",result);
       if (result.operation==="ping"){
         const sendMessage = {operation: 'pong'};
         console.log("ping받음");
@@ -143,21 +143,25 @@ export default {
         const order = result.body;
         commit('PLUS_WAITORDERS',order);
       }else if(result.operation==='replyAcceptOrder'){
+        console.log("body:",result.body);
         const isSuccess = result.body.isSuccess;
         const id = result.body.id;
-        if(isSuccess===true){
+        console.log("reply왔음");
+        console.log("type of isSuccess: ",isSuccess);
+        if(isSuccess==true){
+          console.log("true찾음");
           commit('waitToProcess',id);
         }
       }else if(result.operation==='replyRefuseOrder'){
         const isSuccess = result.body.isSuccess;
         const id = result.body.id;
-        if(isSuccess===true){
+        if(isSuccess==true){
           commit('waitToAllOf',id);
         }
       }else if(result.operation==='replyStartDelivery'){
         const isSuccess = result.body.isSuccess;
         const id = result.body.id;
-        if(isSuccess===true){
+        if(isSuccess==true){
           commit('processToComplete',id);
         }
       }
