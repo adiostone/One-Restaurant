@@ -211,6 +211,17 @@ export default {
     color:white;
     width:100%;
 }
+.price__badge{
+    margin-left: 5px;
+    font-size: 7px;
+    padding: 3px;
+    border: 0.5px groove grey;
+    font-weight: 600;
+    color:dodgerblue;
+    border-radius: 5px;
+    margin-right:3px;
+    vertical-align: middle;
+}
 .orderModal__menus-single{
     margin-bottom:20px;
 }
