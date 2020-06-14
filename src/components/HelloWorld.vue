@@ -52,9 +52,6 @@ export default {
       return this.$store.state.alert;
     }
   },
-  created() {
-    this.initWS();
-  },
   methods: {
     toggleAlert(){
       this.$store.state.alert = false;
