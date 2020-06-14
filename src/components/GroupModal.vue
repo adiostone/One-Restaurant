@@ -5,7 +5,7 @@
     </div>
   <div class="text-center" data-app >
 
-      
+      <div class="testDiv">
       <div v-for="(customer, index) in groupCustomer" v-bind:key="customer.phoneNumber" class="orderModal">
           <div class="orderModal__time">
               단체배달고객 {{index+1}}
@@ -41,12 +41,12 @@
                   <div class="orderModal__menus-text-various">
                       단체메뉴(수량)
                   </div>
-                  <div v-for="groupMenu in groupMenus" v-bind:key="groupMenu.id" class="orderModal__menu">
+                  <div v-for="groupMenu in groupMenus(index)" v-bind:key="groupMenu.id" class="orderModal__menu">
                       <div class="orderModal__menu-name">
                           {{groupMenu.name}}({{groupMenu.quantity}}) 
                       </div>
                       <div class="orderModal__menu-price">
-                          <span class="price__badge">+포장비{{groupMenu.packagingCost}}원</span>{{groupMenu.menuTotalPrice}}원
+                          <span class="price__badge">+포장비{{groupMenu.packagingCost}}원</span>{{groupMenu.pricePerCapita}}원
                       </div>
                   </div>
               </div>
@@ -54,12 +54,12 @@
                   <div class="orderModal__menus-text-single">
                       개인메뉴(수량)
                   </div>
-                  <div v-for="singleMenu in singleMenus" v-bind:key="singleMenu.id" class="orderModal__menu">
+                  <div v-for="singleMenu in singleMenus(index)" v-bind:key="singleMenu.id" class="orderModal__menu">
                       <div class="orderModal__menu-name">
-                          {{singleMenu.name}}({{singleMenu.menuTotalPrice}})
+                          {{singleMenu.name}}({{singleMenu.pricePerCapita}})
                       </div>
                       <div class="orderModal__menu-price">
-                          {{singleMenu.menuTotalPrice}}원
+                          {{singleMenu.pricePerCapita}}원
                       </div>
                   </div>
               </div>
@@ -83,10 +83,13 @@
                       </div>
                   </div>
               </div>
+              <v-btn text class="printOut"><i class="fas fa-print"></i>주문표 인쇄</v-btn>
           </div>
       </div>
-    <v-btn text class="printOut"><i class="fas fa-print"></i>주문표 인쇄</v-btn>
+      </div>
+    
   </div>
+  
 </div>
 </template>
 
@@ -104,24 +107,23 @@ export default {
       groupCustomer(){
           return this.$store.getters.groupCustomer(this.orderID);
       },
-      groupMenus(){
+
+  },
+  methods: {
+        groupMenus(index){
           let result = [];
-          for(let k = 0; k<this.groupCustomer.length; k++){
-            for(let i = 0 ; i<this.groupCustomer[k].menus.length;i++){
-                if(this.groupCustomer[k].menus[i].isShared === true){
-                    result.push(this.groupCustomer[k].menus[i]);
+            for(let i = 0 ; i<this.groupCustomer[index].menus.length;i++){
+                if(this.groupCustomer[index].menus[i].isShared === true){
+                    result.push(this.groupCustomer[index].menus[i]);
                 }
             }
-          }
           return result;
       },
-      singleMenus(){
+      singleMenus(index){
           let result = [];
-          for(let k = 0; k<this.groupCustomer.length; k++){
-            for(let i = 0 ; i<this.groupCustomer[k].menus.length;i++){
-                if(this.groupCustomer[k].menus[i].isShared === false){
-                    result.push(this.groupCustomer[k].menus[i]);
-                }
+          for(let i = 0 ; i<this.groupCustomer[index].menus.length;i++){
+            if(this.groupCustomer[index].menus[i].isShared === false){
+                result.push(this.groupCustomer[index].menus[i]);
             }
           }
           return result;
@@ -148,7 +150,13 @@ export default {
     margin-bottom:10px;
 }
 .text-center{
-    width:300px;
+    width:100%;
+    /* display:flex;
+    justify-content: space-betw; */
+}
+.testDiv{
+    display:flex;
+    justify-content: space-around;
 }
 .modal{
     background-color:#FF6060;
@@ -157,6 +165,7 @@ export default {
 }
 .orderModal{
     background-color: white;
+    
 }
 .orderModal__time{
     padding:  20px 20px;
@@ -199,6 +208,7 @@ export default {
 }
 .orderModal__menus{
     padding: 5px 20px 10px 0px;
+    
 }
 .orderModal__menu{
     display:flex;
@@ -213,7 +223,7 @@ export default {
     justify-content: space-between;
     margin-bottom:5px;
 }
-.text-center >>> .printOut{
+.groupContainer >>> .printOut{
     background-color:#9CCC65;
     color:white;
     width:100%;
@@ -228,5 +238,8 @@ export default {
     border-radius: 5px;
     margin-right:3px;
     vertical-align: middle;
+}
+.orderModal__menus-single{
+    margin-bottom:20px;
 }
 </style>

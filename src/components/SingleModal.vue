@@ -1,4 +1,5 @@
 <template>
+<div class="testDiv">
   <div class="text-center" data-app >
       <div v-for="(customer, index) in singleCustomer" v-bind:key="customer.phoneNumber" class="orderModal">
           <div class="orderModal__time">
@@ -43,12 +44,12 @@
                   <div class="orderModal__menus-text-various">
                       단체메뉴(수량)
                   </div>
-                  <div v-for="groupMenu in groupMenus" v-bind:key="groupMenu.id" class="orderModal__menu">
+                  <div v-for="groupMenu in groupMenus(index)" v-bind:key="groupMenu.id" class="orderModal__menu">
                       <div class="orderModal__menu-name">
                           {{groupMenu.name}}({{groupMenu.quantity}}) 
                       </div>
                       <div class="orderModal__menu-price">
-                          {{groupMenu.menuTotalPrice}}+{{groupMenu.packagingCost}}원
+                          <span class="price__badge">+포장비{{groupMenu.packagingCost}}원</span>{{groupMenu.pricePerCapita}}원
                       </div>
                   </div>
               </div>
@@ -56,12 +57,12 @@
                   <div class="orderModal__menus-text-single">
                       개인메뉴(수량)
                   </div>
-                  <div v-for="singleMenu in singleMenus" v-bind:key="singleMenu.id" class="orderModal__menu">
+                  <div v-for="singleMenu in singleMenus(index)" v-bind:key="singleMenu.id" class="orderModal__menu">
                       <div class="orderModal__menu-name">
-                          {{singleMenu.name}}({{singleMenu.menuTotalPrice}})
+                          {{singleMenu.name}}({{singleMenu.pricePerCapita}})
                       </div>
                       <div class="orderModal__menu-price">
-                          {{singleMenu.menuTotalPrice}}원
+                          {{singleMenu.pricePerCapita}}원
                       </div>
                   </div>
               </div>
@@ -94,9 +95,11 @@
                   </div>
               </div>
           </div>
+        <v-btn text class="printOut"><i class="fas fa-print"></i>주문표 인쇄</v-btn>
       </div>
-    <v-btn text class="printOut"><i class="fas fa-print"></i>주문표 인쇄</v-btn>
+    
   </div>
+</div>
 </template>
 
 <script>
@@ -113,24 +116,22 @@ export default {
       singleCustomer(){
           return this.$store.getters.singleCustomer(this.orderID);
       },
-      groupMenus(){
+  },
+  methods: {
+        groupMenus(index){
           let result = [];
-          for(let k = 0; k<this.singleCustomer.length; k++){
-            for(let i = 0 ; i<this.singleCustomer[k].menus.length;i++){
-                if(this.singleCustomer[k].menus[i].isShared === true){
-                    result.push(this.singleCustomer[k].menus[i]);
+            for(let i = 0 ; i<this.singleCustomer[index].menus.length;i++){
+                if(this.singleCustomer[index].menus[i].isShared === true){
+                    result.push(this.singleCustomer[index].menus[i]);
                 }
             }
-          }
           return result;
       },
-      singleMenus(){
+      singleMenus(index){
           let result = [];
-          for(let k = 0; k<this.singleCustomer.length; k++){
-            for(let i = 0 ; i<this.singleCustomer[k].menus.length;i++){
-                if(this.singleCustomer[k].menus[i].isShared === false){
-                    result.push(this.singleCustomer[k].menus[i]);
-                }
+          for(let i = 0 ; i<this.singleCustomer[index].menus.length;i++){
+            if(this.singleCustomer[index].menus[i].isShared === false){
+                result.push(this.singleCustomer[index].menus[i]);
             }
           }
           return result;
@@ -141,6 +142,10 @@ export default {
 </script>
 
 <style scoped>
+.testDiv{
+    display:flex;
+    justify-content: space-around;
+}
 .modal{
     background-color:dodgerblue;
     color: white;
@@ -205,5 +210,8 @@ export default {
     background-color:#9CCC65;
     color:white;
     width:100%;
+}
+.orderModal__menus-single{
+    margin-bottom:20px;
 }
 </style>

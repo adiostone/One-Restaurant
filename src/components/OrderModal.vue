@@ -173,4 +173,7 @@ export default {
     color:white;
     width: 100%;
 }
+.orderModal__menus-single{
+    margin-bottom:20px;
+}
 </style>

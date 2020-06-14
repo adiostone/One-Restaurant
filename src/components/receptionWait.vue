@@ -16,7 +16,7 @@
 
         <div class="order__text">
           <span class="order__text2"
-            >{{`${order.byMenu.menus[0].name}/${order.byMenu.menus[1].name}등 총${order.byMenu.menus.length}개`}} </span
+            >{{`${order.byMenu.menus[0].name}`}}{{sampleMenu(index)}}등 총{{`${order.byMenu.menus.length}개`}} </span
           >
         </div>
         <div class="order__text">
@@ -84,6 +84,14 @@ export default {
       }
       return count;
     },
+    sampleMenu(index){
+      let temp = this.waitOrders[index];
+      if(temp.byMenu.menus.length>1){
+        return "/"+temp.byMenu.menus[1].name;
+      }else{
+        return "";
+      }
+    }
   },
   
 
